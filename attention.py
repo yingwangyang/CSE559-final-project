@@ -33,6 +33,7 @@ class Net(nn.Module):
             nn.Linear(self.size_hidden2_dense, 1),
             nn.Sigmoid()
         )
+        self.relu = nn.ReLU()
 
     def forward(self, pep, tcr):
 
@@ -44,8 +45,13 @@ class Net(nn.Module):
         tcr = torch.transpose(tcr, 0, 1)
 
         # Attention
-        pep, pep_attn = self.attn_pep(pep,pep,pep)
-        tcr, tcr_attn = self.attn_tcr(tcr,tcr,tcr)
+        pep_new, pep_attn = self.attn_pep(pep,pep,pep)
+        tcr_new, tcr_attn = self.attn_tcr(tcr,tcr,tcr)
+        
+        pep=pep_new+pep
+        tcr=tcr_new+tcr
+        pep = self.relu(pep)
+        tcr = self.relu(tcr)
 
         pep = torch.transpose(pep, 0, 1)
         tcr = torch.transpose(tcr, 0, 1)
