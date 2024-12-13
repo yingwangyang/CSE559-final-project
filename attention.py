@@ -48,10 +48,14 @@ class Net(nn.Module):
         pep_new, pep_attn = self.attn_pep(pep,pep,pep)
         tcr_new, tcr_attn = self.attn_tcr(tcr,tcr,tcr)
         
+        # add residual connection
         pep=pep_new+pep
         tcr=tcr_new+tcr
         pep = self.relu(pep)
         tcr = self.relu(tcr)
+
+        # pep=pep_new
+        # tcr=tcr_new
 
         pep = torch.transpose(pep, 0, 1)
         tcr = torch.transpose(tcr, 0, 1)
